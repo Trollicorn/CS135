@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-
+//Mohammed Uddin
 int price_per_100(int price, int efficiency){
 	return 100 * price/efficiency;
 }
