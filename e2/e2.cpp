@@ -2,7 +2,7 @@
 
 #include <iostream>
 using namespace std;
-//Mohammed Uddin
+
 float price_per_100(float price, float efficiency){
 	return 100 * price/efficiency;
 }
