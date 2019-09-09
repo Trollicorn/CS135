@@ -2,9 +2,9 @@
 Author: Mohammed Uddin
 Course: CSCI 136
 Instructor: Maryash
-Assignment: Project 1C
+Assignment: Project 1D
 
-reads multiple sequences of one or more non-negative integers in a file to be added or subtracted with each sequence seperated by semicolons and reports the value of each computation
+reads multiple sequences of one or more non-negative integers in a file to be added, subtracted, or squared with each sequence seperated by semicolons and reports the value of each computation
 */
 
 #include <iostream>
@@ -24,6 +24,9 @@ int main() {
 		}
 		else if (isdigit(c)){ //update current number
 			curr = curr*10 + (c - '0');
+		}
+		else if (c == '^'){
+			curr *= curr;
 		}
 		else{ //number is finished, add/subtract its value to sum
 			sum += curr * o;
