@@ -11,14 +11,14 @@ reads a sequence of one or more non-negative integers in a file to be added or s
 
 int main() {
 	char c;
-	int sum = 0;
-	int curr = 0;
-	int o = 1; //sign
+	int sum = 0; //tracks overall value
+	int curr = 0; //tracks current number
+	int o = 1; //sign (positive/negative)
 	while (std::cin >> c) {
-		if (isdigit(c)){
+		if (isdigit(c)){ //update current number
 			curr = curr*10 + (c - '0');
 		}
-		else{
+		else{ //number is finished, add/subtract its value to sum
 			sum += curr * o;
 			curr = 0;
 			if (c == '+'){
