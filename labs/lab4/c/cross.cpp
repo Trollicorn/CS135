@@ -8,9 +8,9 @@ int main(){
 	
 	std::cout << "shape:\n";
 
-	for (int i = 0; i < size; i++){
-		for (int j = 0; j < size; j++){
-			std::cout << (i == j ? "*" : " ");
+	for (int r = 0; r < size; r++){
+		for (int c = 0; c < size; c++){
+			std::cout << (r == c || size - c == r + 1 ? "*" : " ");
 		}
 		std::cout << "\n";
 	}
