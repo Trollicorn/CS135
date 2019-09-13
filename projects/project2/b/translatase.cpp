@@ -25,23 +25,19 @@ int main(){
 		std::cerr << "file not found\n";
 		exit(1);
 	}
-	
 	std::ifstream file("dna2b.txt");
 	if (file.fail()){
 		std::cerr << "file not found\n";
 		exit(1);
 	}
-	
 	/*
 	std::cout << "GGU, expecting Gly: " << dictionary_read(codons,"GGU") << '\n';
 	std::cout << "UAA, expecting Stop: " << dictionary_read(codons,"UAA") << '\n';
 	std::cout << "MUG, expecting ERR: " << dictionary_read(codons,"MUG") << '\n'; 
 	*/
-
 	std::string strand;
 	while(getline(file,strand)){
 		//std::cout << strand << "\n";
-		
 		int len = strand.length();
 		/*
 		char transcript[len+1];
@@ -73,7 +69,7 @@ int main(){
 		}
 		std::cout << '\n';
 	}
-
+	codons.close();
 	file.close();
 	return 0;
 }
