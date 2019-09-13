@@ -51,13 +51,25 @@ int main(){
 		}
 		std::cout << transcript << "\n";
 		*/
+		bool start = false;
 		for (int i = 0; i < len; i += 3){
 			char codon[4];
 			for (int j = 0; j < 3; j++){
 				codon[j] = complement(strand[i+j]);
 			}
 			codon[4] = '\0';
-			std::cout << dictionary_read(codons, codon) << ' ';
+			//std::cout << dictionary_read(codons, codon) << ' ';
+			std::string protein = dictionary_read(codons,codon);
+			if (! protein.compare("Stop")){
+				start = false;
+			}
+			if (start){
+				std::cout << '-' << protein;
+			}
+			if (! protein.compare("Met")){
+				std::cout << protein;
+				start = true;
+			}
 		}
 		std::cout << '\n';
 	}
