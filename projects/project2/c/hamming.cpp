@@ -47,75 +47,54 @@ int main(){
 		getline(file,mutate);
 		std::cout << hamming(strand,mutate) << ' ';
 		int len = strand.length();
-		bool startA = false;
-		bool startB = false;
-	//	std::string proteinA (' ',len*2);
-		char proteinA[len*2];
-		char proteinB[len*2];
-	//	std::cout << mutate << '\n';
-		int indexA = 0;
-		int indexB = 0;
-		for (int i = 0; i < len; i += 3){
-			char codonA[5]; 
-			char codonB[5];
-			for (int j = 0; j < 3; j++){
-				codonA[j] = complement(strand[i+j]);
-	//			std::cout << complement(mutate[i+j]) << '\n';
-				codonB[j] = complement(mutate[i+j]);
-			}
-			codonA[4] = '\0';
-			codonB[4] = '\0';
-	//		std::cout << codonA << '-';
-	//		std::cout << codonB << '\n';
-			std::string proA = dictionary_read(codons,codonA);
-			std::string proB = dictionary_read(codons,codonB);
-			if (! proA.compare("Stop")){
-				proteinA[indexA] = '\0';
-				startA = false;
-			}
-			if (! proB.compare("Stop")){
-				proteinB[indexB] = '\0';
-				startB = false;
-			}
-			if (startA){
-				proteinA[indexA] = '-';
-				indexA++;
-				for (int p = 0; p < 3; p++){
-					proteinA[indexA] = proA[p];
-					indexA++;
+
+		bool start;
+		char protein[len*2];
+		int index;
+		std::string str;
+		std::string proteinA;
+		std::string proteinB;
+		for (int m = 0; m < 2; m++){
+			str = m ? mutate : strand;
+			start = false;
+			index = 0;
+			for (int i = 0; i < len; i += 3){
+				char codon[4];	
+				for (int j = 0; j < 3; j++){
+					codon[j] = complement(str[i+j]);
 				}
-			}
-			if (startB){
-				proteinB[indexB] = '-';
-				indexB++;
-				for (int p = 0; p < 3; p++){
-					proteinB[indexB] = proB[p];
-					indexB++;
+				codon[3] = '\0';
+				std::string pro = dictionary_read(codons,codon);
+				if (! pro.compare("Stop")){
+					protein[index] = '\0';
+					start = false;
 				}
-			}
-			if (! proA.compare("Met")){
-				for (int p = 0; p < 3; p++){
-					proteinA[indexA] = proA[p];
-					indexA++;
+				if (start){
+					protein[index] = '-';
+					index++;
+					for (int p = 0; p < 3; p++){
+						protein[index] = pro[p];
+						index++;
+					}
 				}
-				startA = true;
-			}
-			if (! proB.compare("Met")){
-				for (int p = 0; p < 3; p++){
-					proteinB[indexB] = proB[p];
-					indexB++;
+				if (! pro.compare("Met")){
+					for (int p = 0; p < 3; p++){
+						protein[index] = pro[p];
+						index++;
+					}
+					start = true;
 				}
-				startB = true;
+
+			}
+			protein[index] = '\0';
+			std::string temp(protein);
+			if (! m){ //working on original strand
+				proteinA = temp;
+			}else { //working on mutated strand
+				proteinB = temp;
 			}
 		}
-		proteinA[indexA] = '\0';
-		proteinB[indexB] = '\0';
-		std::string A(proteinA);
-		std::string B(proteinB);
-
-		std::cout << (A.compare(B) ? "yes" : "no") << '\n';
-	//	std::cout << proteinA << '\n';
-	//	std::cout << proteinB << '\n';
+		std::cout << (proteinA.compare(proteinB) ? "yes" : "no") << '\n';
 	}
 	codons.close();
 	file.close();
