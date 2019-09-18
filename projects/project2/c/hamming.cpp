@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 
-char complement(char c){ //assumes c is one of A,T,C,G
-	return c == 'A' ? 'U' : c == 'T' ? 'A' : c == 'C' ? 'G' : 'C';
+char complement(char c){ 
+	return c == 'A' ? 'U' : c == 'T' ? 'A' : c == 'C' ? 'G' : c == 'G' ? 'C' : 'R'; //R is an error
 }
 
 std::string dictionary_read(std::ifstream &dict, std::string codon){
@@ -43,30 +44,50 @@ int main(){
 	std::string strand;
 	std::string mutate;
 	while(getline(file,strand)){
-		getline(file,mutate);
-		std::cout << hamming(strand,mutate) << "\n";
+	//	getline(file,mutate);
+	//	std::cout << hamming(strand,mutate) << " ";
 		int len = strand.length();
-		bool start = false;
+		bool startA = false;
+	//	bool startB = false;
+	//	std::string proteinA (' ',len*2);
+		char proteinA[len*2];
+	//	std::string proteinB (' ',len*2);
+	//	std::cout << strand << '\n';
+		int index = 0;
 		for (int i = 0; i < len; i += 3){
-			char codon[4];
+			char codonA[4]; 
+	//		char codonB[4];
 			for (int j = 0; j < 3; j++){
-				codon[j] = complement(strand[i+j]);
+				codonA[j] = complement(strand[i+j]);
+	//			std::cout << codonA << '\n';
+	//			codonB[j] = complement(mutate[i+j]);
 			}
-			codon[4] = '\0';
-			//std::cout << dictionary_read(codons, codon) << ' ';
-			std::string protein = dictionary_read(codons,codon);
-			if (! protein.compare("Stop")){
-				start = false;
+			codonA[4] = '\0';
+	//		codonB[4] = '\0';
+			std::string proA = dictionary_read(codons,codonA);
+	//		std::string proB = dictionary_read(codons,codonB);
+			if (! proA.compare("Stop")){
+				proteinA[index] = '\0';
+				startA = false;
 			}
-			if (start){
-				std::cout << '-' << protein;
+			if (startA){
+				proteinA[index] = '-';
+				index++;
+				for (int p = 0; p < 3; p++){
+					proteinA[index] = proA[p];
+					index++;
+				}
 			}
-			if (! protein.compare("Met")){
-				std::cout << protein;
-				start = true;
+			if (! proA.compare("Met")){
+				for (int p = 0; p < 3; p++){
+					proteinA[index] = proA[p];
+					index++;
+				}
+				startA = true;
 			}
 		}
-		std::cout << '\n';
+		proteinA[index] = '\0';
+		std::cout << proteinA << '\n';
 	}
 	codons.close();
 	file.close();
