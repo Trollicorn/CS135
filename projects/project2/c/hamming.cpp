@@ -44,50 +44,74 @@ int main(){
 	std::string strand;
 	std::string mutate;
 	while(getline(file,strand)){
-	//	getline(file,mutate);
-	//	std::cout << hamming(strand,mutate) << " ";
+		getline(file,mutate);
+		std::cout << hamming(strand,mutate) << '\n';
 		int len = strand.length();
 		bool startA = false;
-	//	bool startB = false;
+		bool startB = false;
 	//	std::string proteinA (' ',len*2);
 		char proteinA[len*2];
-	//	std::string proteinB (' ',len*2);
-	//	std::cout << strand << '\n';
-		int index = 0;
+		char proteinB[len*2];
+	//	std::cout << mutate << '\n';
+		int indexA = 0;
+		int indexB = 0;
 		for (int i = 0; i < len; i += 3){
-			char codonA[4]; 
-	//		char codonB[4];
+			char codonA[5]; 
+			char codonB[5];
 			for (int j = 0; j < 3; j++){
 				codonA[j] = complement(strand[i+j]);
-	//			std::cout << codonA << '\n';
-	//			codonB[j] = complement(mutate[i+j]);
+	//			std::cout << complement(mutate[i+j]) << '\n';
+				codonB[j] = complement(mutate[i+j]);
 			}
 			codonA[4] = '\0';
-	//		codonB[4] = '\0';
+			codonB[4] = '\0';
+	//		std::cout << codonA << '-';
+	//		std::cout << codonB << '\n';
 			std::string proA = dictionary_read(codons,codonA);
-	//		std::string proB = dictionary_read(codons,codonB);
+			std::string proB = dictionary_read(codons,codonB);
 			if (! proA.compare("Stop")){
-				proteinA[index] = '\0';
+				proteinA[indexA] = '\0';
 				startA = false;
 			}
+			if (! proB.compare("Stop")){
+				proteinB[indexB] = '\0';
+				startB = false;
+			}
 			if (startA){
-				proteinA[index] = '-';
-				index++;
+				proteinA[indexA] = '-';
+				indexA++;
 				for (int p = 0; p < 3; p++){
-					proteinA[index] = proA[p];
-					index++;
+					proteinA[indexA] = proA[p];
+					indexA++;
+				}
+			}
+			if (startB){
+				proteinB[indexB] = '-';
+				indexB++;
+				for (int p = 0; p < 3; p++){
+					proteinB[indexB] = proB[p];
+					indexB++;
 				}
 			}
 			if (! proA.compare("Met")){
 				for (int p = 0; p < 3; p++){
-					proteinA[index] = proA[p];
-					index++;
+					proteinA[indexA] = proA[p];
+					indexA++;
 				}
 				startA = true;
 			}
+			if (! proB.compare("Met")){
+				for (int p = 0; p < 3; p++){
+					proteinB[indexB] = proB[p];
+					indexB++;
+				}
+				startB = true;
+			}
 		}
-		proteinA[index] = '\0';
+		proteinA[indexA] = '\0';
+		proteinB[indexB] = '\0';
 		std::cout << proteinA << '\n';
+		std::cout << proteinB << '\n';
 	}
 	codons.close();
 	file.close();
