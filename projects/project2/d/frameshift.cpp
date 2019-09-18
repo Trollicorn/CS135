@@ -34,17 +34,16 @@ int main(){
 	std::string strand;
 	while(getline(file,strand)){
 		int len = strand.length();
-		int index = 0;
+		int i = -1;
 		bool found = false;
-		for (int i = 0; !found && i < len-2; i++){
+		while (!found && i < len-2){
+			i++;
 			if (strand[i]=='T' && strand[i+1]=='A' && strand[i+2]=='C'){
-				index = i;
 				found = true;
 			}
 		}
 		bool start = false;
-		int end = (len-index)/3;
-		int i = index;
+		int end = (len-i)/3;
 		for (int c = 0; c < end; c++){
 			char codon[4];
 			for (int j = 0; j < 3; j++){
