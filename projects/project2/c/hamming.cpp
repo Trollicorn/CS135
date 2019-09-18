@@ -45,7 +45,7 @@ int main(){
 	std::string mutate;
 	while(getline(file,strand)){
 		getline(file,mutate);
-		std::cout << hamming(strand,mutate) << '\n';
+		std::cout << hamming(strand,mutate) << ' ';
 		int len = strand.length();
 		bool startA = false;
 		bool startB = false;
@@ -110,8 +110,12 @@ int main(){
 		}
 		proteinA[indexA] = '\0';
 		proteinB[indexB] = '\0';
-		std::cout << proteinA << '\n';
-		std::cout << proteinB << '\n';
+		std::string A(proteinA);
+		std::string B(proteinB);
+
+		std::cout << (A.compare(B) ? "yes" : "no") << '\n';
+	//	std::cout << proteinA << '\n';
+	//	std::cout << proteinB << '\n';
 	}
 	codons.close();
 	file.close();
