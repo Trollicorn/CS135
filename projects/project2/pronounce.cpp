@@ -1,3 +1,13 @@
+/*
+Author: Mohammed Author
+Course: CSCI-135
+Instructor: Maryash
+Assignment: Project 2
+
+takes a word and outputs its pronunciation as a list of phenomes
+also outputs words with identical phenomes and words with 1 phenome replaced, 1 phenome inserted, or 1 phenome removed
+*/
+
 #include <iostream>
 #include <fstream>
 
@@ -108,7 +118,7 @@ void replace(std::string input){
 			}
 		}
 		file.clear();
-		file.seekg(0);
+		file.seekg(std::ios::beg);
 	}
 }
 
@@ -151,7 +161,47 @@ void insert(std::string input){
 			}
 		}
 		file.clear();
-		file.seekg(0);
+		file.seekg(std::ios::beg);
+	}
+}
+
+void remove(std::string input){
+	std::ifstream file("cmudict.0.7a");
+	if (file.fail()){
+		std::cerr << "file not found\n";
+		exit(1);
+	}
+	std::string line;
+	int words = numWords(input);
+	for (int i = 0; i < words; i++){
+		std::string pre = "";
+		std::string before = "";
+		std::string after = input;
+		splitOnSpace(input,before,after); //get rid of first word
+		for (int j = 0; j < i; j++){ //get rid of other words if necessary
+			pre = pre + before + " ";
+			splitOnSpace(after,before,after);
+		}
+		while(std::getline(file,line)){
+			std::string junkpre = "";
+			std::string junk;
+			std::string word;
+			std::string pronunciation;
+			splitOnSpace(line,word,pronunciation);
+			splitOnSpace(pronunciation,junk,pronunciation);//phenomes only, no space
+			std::string junkafter = pronunciation;
+			if (words == numWords(pronunciation)+1){
+				for (int k = 0; k < i; k++){
+					splitOnSpace(junkafter,junk,junkafter); // move word from junkafter to junkpre
+					junkpre = junkpre + junk + " ";
+				}
+				if (!pre.compare(junkpre) && !after.compare(junkafter) && input.compare(pronunciation)){
+					std::cout << ' ' << word;
+				}
+			}
+		}
+		file.clear();
+		file.seekg(std::ios::beg);
 	}
 }
 
@@ -167,7 +217,7 @@ int main(){
 		std::cerr << "ERROR: WORD NOT FOUND\n";
 		exit(1);
 	}
-	std::cout << "Pronunciation    :" << pronunciation << '\n';
+	std::cout << "Pronunciation    :" << pronunciation << "\n\n";
 	std::cout << "Identical        : ";
 	identical(word,pronunciation);
 	std::cout << '\n';
@@ -178,5 +228,8 @@ int main(){
 	std::cout << '\n';
 	std::cout << "Add phenome      :";
 	insert(pronunciation);
+	std::cout << '\n';
+	std::cout << "Remove phenome   :";
+	remove(pronunciation);
 	std::cout << '\n';
 }
