@@ -1,5 +1,5 @@
 /*
-Author: Mohammed Author
+Author: Mohammed Uddin
 Course: CSCI-135
 Instructor: Maryash
 Assignment: Project 2
@@ -42,6 +42,16 @@ int numWords(std::string line){
 		}
 	}
 	return num;
+}
+
+bool checkWord(std::string word){
+	int len = word.length();
+	for (int i = 0; i < len; i++){
+		if (!std::isalpha(word[i]) && word[i]!='\''){
+			return false;
+		}
+	}
+	return true;
 }
 
 std::string pronounce(std::string input){
@@ -122,9 +132,11 @@ void replace(std::string input){
 		std::string pronunciation;
 		std::string junk;
 		splitOnSpace(line,word,pronunciation);
-		splitOnSpace(pronunciation,junk,pronunciation);//phonemes only, no space
-		if (checkReplace(input,pronunciation) && input.compare(pronunciation)){
-			std::cout << ' ' << word;
+		if (checkWord(word)){
+			splitOnSpace(pronunciation,junk,pronunciation);//phonemes only, no space
+			if (checkReplace(input,pronunciation) && input.compare(pronunciation)){
+				std::cout << ' ' << word;
+			}
 		}
 	}
 }
@@ -210,9 +222,11 @@ void insert(std::string input){
 		std::string pronunciation;
 		std::string junk;
 		splitOnSpace(line,word,pronunciation);
-		splitOnSpace(pronunciation,junk,pronunciation);//phonemes only, no space
-		if (checkInsert(input,pronunciation)){
-			std::cout << ' ' << word;
+		if (checkWord(word)){
+			splitOnSpace(pronunciation,junk,pronunciation);//phonemes only, no space
+			if (checkInsert(input,pronunciation)){
+				std::cout << ' ' << word;
+			}
 		}
 	}
 }
@@ -261,8 +275,6 @@ void insertOld(std::string input){
 }
 
 bool checkRemove(std::string input, std::string pronunciation){
-	std::string before;
-	std::string after;
 	int words = numWords(input);
 	if (words != numWords(pronunciation)+1){
 		return false;
@@ -270,9 +282,9 @@ bool checkRemove(std::string input, std::string pronunciation){
 	for (int i = 0; i < words; i++){
 		std::string pre0 = "", pre1 = "";
 		std::string before0, after0; //input
-		std::string before1, after1; //pronunciation
+		std::string before1;
+		std::string after1 = pronunciation; //pronunciation
 		splitOnSpace(input,before0,after0); //first phoneme gone
-		splitOnSpace(pronunciation,before1,after1);
 		for (int j = 0; j < i; j++){ //remove other phonemes as necessary
 			pre0 = pre0 + before0 + " ";
 			splitOnSpace(after0,before0,after0);
@@ -300,9 +312,11 @@ void remove(std::string input){
 		std::string pronunciation;
 		std::string junk;
 		splitOnSpace(line,word,pronunciation);
-		splitOnSpace(pronunciation,junk,pronunciation);//phonemes only, no space
-		if (checkRemove(input,pronunciation)){
-			std::cout << ' ' << word;
+		if (checkWord(word)){
+			splitOnSpace(pronunciation,junk,pronunciation);//phonemes only, no space
+			if (checkRemove(input,pronunciation)){
+				std::cout << ' ' << word;
+			}
 		}
 	}
 }
