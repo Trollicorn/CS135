@@ -13,26 +13,16 @@ and words with 1 phoneme replaced, 1 phoneme inserted, or 1 phoneme removed
 #include <fstream>
 
 //OPTIMZE SPLIT LATER
-bool splitOnSpace(std::string s, std::string &before, std::string &after) {
-	// reset strings
+void splitOnSpace(std::string s, std::string &before, std::string &after) {
 	before = "";
 	after = "";
-	// accumulate before space
+	int len = s.size();
 	int i = 0;
-	while (i < s.size() && not isspace(s[i])) {
-		before = before + s[i];
-		i++;
-	}
-	// skip the space
-	i++;
-	// accumulate after space
-	while (i < s.size()) {
-		after = after + s[i];
-		i++;
-	}
-	return after.size();
+	for (i; i < len && !isspace(s[i]); i++);
+	before = s.substr(0,i);
+	if (i == len) return;
+	after = s.substr(i+1);
 }
-//E
 
 int numWords(std::string line){
 	int num = 1;
