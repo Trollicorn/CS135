@@ -26,7 +26,8 @@ void splitOnSpace(std::string s, std::string &before, std::string &after) {
 
 int numWords(std::string line){
 	int num = 1;
-	for(int i = 0; i < line.length(); i++){
+	int len = line.length();
+	for(int i = 0; i < len; i++){
 		if (isspace(line[i])){
 			num++;
 		}
@@ -50,6 +51,8 @@ std::string pronounce(std::string input){
 		std::cerr << "file not found\n";
 		exit(1);
 	}
+	file.clear();
+	file.seekg(std::ios::beg);
 	std::string line;
 	std::string word;
 	std::string pronunciation;
@@ -70,6 +73,8 @@ void identical(std::string input, std::string phonemes){
 		std::cerr << "file not found\n";
 		exit(1);
 	}
+	file.clear();
+	file.seekg(std::ios::beg);
 	std::string line;
 	std::string word;
 	std::string pronunciation;
@@ -79,7 +84,6 @@ void identical(std::string input, std::string phonemes){
 			std::cout << word << ' ';
 		}
 	}
-
 }
 
 bool checkReplace(std::string input,std::string pronunciation){
@@ -128,47 +132,6 @@ void replace(std::string input){
 				std::cout << ' ' << word;
 			}
 		}
-	}
-}
-
-void replaceOld(std::string input){
-	std::ifstream file("cmudict.0.7a");
-	if (file.fail()){
-		std::cerr << "file not found\n";
-		exit(1);
-	}
-	std::string line;
-	int words = numWords(input);
-	for (int i = 0; i < words; i++){
-		std::string pre = "";
-		std::string before;
-		std::string after;
-		splitOnSpace(input,before,after); //get rid of first word
-		for (int j = 0; j < i; j++){ //get rid of other words if necessary
-			pre = pre + before + " ";
-			splitOnSpace(after,before,after);
-		}
-		while(std::getline(file,line)){
-			std::string junkpre = "";
-			std::string junk;
-			std::string word;
-			std::string pronunciation;
-			splitOnSpace(line,word,pronunciation);
-			splitOnSpace(pronunciation,junk,pronunciation);//phonemes only, no space
-			std::string replaced = pronunciation;
-			splitOnSpace(replaced,junk,replaced); //get rid of first word
-			if (words == numWords(pronunciation)){
-				for (int k = 0; k < i; k++){ //get rid of other words if necessary
-					junkpre = junkpre + junk + " ";
-					splitOnSpace(replaced,junk,replaced);
-				}
-				if (!pre.compare(junkpre) && !after.compare(replaced) && input.compare(pronunciation)){
-					std::cout << ' ' << word;
-				}
-			}
-		}
-		file.clear();
-		file.seekg(std::ios::beg);
 	}
 }
 
@@ -221,49 +184,6 @@ void insert(std::string input){
 	}
 }
 
-void insertOld(std::string input){
-	std::ifstream file("cmudict.0.7a");
-	if (file.fail()){
-		std::cerr << "file not found\n";
-		exit(1);
-	}
-	std::string line;
-	int words = numWords(input);
-	for (int i = 0; i < words+1; i++){
-		std::string pre = "";
-		std::string before = "";
-		std::string after = input;
-		for (int j = 0; j < i; j++){
-			splitOnSpace(after,before,after); //move word from after to pre
-			pre = pre + before + " ";
-		}
-//		std::cout << pre << " :: " << after << '\n';
-		while(std::getline(file,line)){
-			std::string junkpre = "";
-			std::string junk;
-			std::string word;
-			std::string pronunciation;
-			splitOnSpace(line,word,pronunciation);
-			splitOnSpace(pronunciation,junk,pronunciation);//phonemes only, no space
-			std::string junkafter = pronunciation;
-			if (words == numWords(pronunciation)-1){
-				for (int k = 0; k < i; k++){
-					splitOnSpace(junkafter,junk,junkafter);
-					junkpre = junkpre + junk + " ";
-		//			std::cout << junkpre << " :: " << junkafter << '\n';
-				}
-				splitOnSpace(junkafter,junk,junkafter);//skip word that is added
-	//			std::cout << pre << " :: " << after << '\n';
-				if (!pre.compare(junkpre) && !after.compare(junkafter) && input.compare(pronunciation)){
-					std::cout << ' ' << word;
-				}
-			}
-		}
-		file.clear();
-		file.seekg(std::ios::beg);
-	}
-}
-
 bool checkRemove(std::string input, std::string pronunciation){
 	int words = numWords(input);
 	if (words != numWords(pronunciation)+1){
@@ -311,46 +231,6 @@ void remove(std::string input){
 	}
 }
 
-void removeOld(std::string input){
-	std::ifstream file("cmudict.0.7a");
-	if (file.fail()){
-		std::cerr << "file not found\n";
-		exit(1);
-	}
-	std::string line;
-	int words = numWords(input);
-	for (int i = 0; i < words; i++){
-		std::string pre = "";
-		std::string before = "";
-		std::string after = input;
-		splitOnSpace(input,before,after); //get rid of first word
-		for (int j = 0; j < i; j++){ //get rid of other words if necessary
-			pre = pre + before + " ";
-			splitOnSpace(after,before,after);
-		}
-		while(std::getline(file,line)){
-			std::string junkpre = "";
-			std::string junk;
-			std::string word;
-			std::string pronunciation;
-			splitOnSpace(line,word,pronunciation);
-			splitOnSpace(pronunciation,junk,pronunciation);//phonemes only, no space
-			std::string junkafter = pronunciation;
-			if (words == numWords(pronunciation)+1){
-				for (int k = 0; k < i; k++){
-					splitOnSpace(junkafter,junk,junkafter); // move word from junkafter to junkpre
-					junkpre = junkpre + junk + " ";
-				}
-				if (!pre.compare(junkpre) && !after.compare(junkafter) && input.compare(pronunciation)){
-					std::cout << ' ' << word;
-				}
-			}
-		}
-		file.clear();
-		file.seekg(std::ios::beg);
-	}
-}
-
 int main(){
 	std::string word;// = "plants";
 	std::cin >> word;
@@ -378,5 +258,5 @@ int main(){
 	std::cout << "Replace phoneme  :";
 	replace(pronunciation);
 	std::cout << '\n';
-
+	return 0;
 }
